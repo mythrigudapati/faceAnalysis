@@ -8,13 +8,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <!-- Google Font (Cute & Clean) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
             margin: 0;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Quicksand', sans-serif;
             background: linear-gradient(135deg, #cce7ff, #f0f8ff);
             color: #0b1d51;
             display: flex;
@@ -34,7 +34,7 @@
 
         .subtitle {
             font-size: 0.9em;
-            font-weight: 300;
+            font-weight: 400;
             margin-top: 5px;
         }
 
@@ -51,6 +51,8 @@
         h2 {
             color: #1d4ed8;
             margin-top: 25px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         p {
@@ -64,6 +66,7 @@
             padding: 12px 25px;
             margin: 15px 0;
             font-size: 1em;
+            font-family: 'Quicksand', sans-serif;
             cursor: pointer;
             border-radius: 25px;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -80,7 +83,7 @@
 
         #label-container div {
             margin: 6px 0;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .instructions {
@@ -108,26 +111,26 @@
 
 <div class="container">
 
-    <h2>🧩 The Problem</h2>
+    <h2>The Problem</h2>
     <p>
         Small businesses often struggle to understand how customers feel about their products.
         Advanced tools for analyzing customer reactions are expensive and not accessible to everyone.
     </p>
 
-    <h2>🎯 Who Can Benefit?</h2>
+    <h2>Who Can Benefit?</h2>
     <p>
         This project can help <strong>small business owners, entrepreneurs, and marketing students</strong>
         explore how facial expressions might relate to customer interest in a product.
     </p>
 
-    <h2>🤖 How the Model Works</h2>
+    <h2>How the Model Works</h2>
     <p>
         This website uses a <strong>Google Teachable Machine image model</strong>.
         The model was trained on different facial expressions and predicts the likelihood
         that a customer is interested in buying a product based on what it sees through the webcam.
     </p>
 
-    <h2>🕹 Try It Yourself!</h2>
+    <h2>Try It Yourself</h2>
     <div class="instructions">
         <ol>
             <li>Click the <strong>Start</strong> button below.</li>
@@ -183,14 +186,4 @@
 
     async function predict() {
         const prediction = await model.predict(webcam.canvas);
-        for (let i = 0; i < maxPredictions; i++) {
-            const classPrediction =
-                prediction[i].className + ": " + (prediction[i].probability * 100).toFixed(1) + "%";
-            labelContainer.childNodes[i].innerHTML = classPrediction;
-        }
-    }
-</script>
-
-</body>
-</html>
 
