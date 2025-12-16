@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Customer Purchase Predictor</title>
+
+    <!-- Quicksand Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- TensorFlow + Teachable Machine -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
     <style>
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #d0e8ff; /* light blue */
-            color: #0b1d51; /* navy text */
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #cbe7ff, #eaf4ff);
+            color: #0b1d51;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -18,60 +24,134 @@
 
         header {
             width: 100%;
-            background-color: #0b1d51; /* navy header */
+            background: linear-gradient(90deg, #0b1d51, #1f4fd8);
             color: white;
-            padding: 20px 0;
+            padding: 25px 0;
             text-align: center;
-            font-size: 2em;
-            font-weight: bold;
+            font-size: 2.2em;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
 
         .container {
             background-color: white;
-            border-radius: 10px;
+            border-radius: 16px;
             padding: 30px;
-            margin: 20px;
-            box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+            margin: 25px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.15);
             text-align: center;
-            max-width: 500px;
+            max-width: 600px;
+        }
+
+        h2, h3 {
+            margin-top: 15px;
+            color: #1f4fd8;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #ddd;
+            margin: 20px 0;
         }
 
         button {
-            background-color: #0b1d51;
+            background: linear-gradient(135deg, #1f4fd8, #4f8cff);
             color: white;
             border: none;
-            padding: 10px 20px;
-            margin: 15px 0;
-            font-size: 1em;
+            padding: 12px 26px;
+            margin: 20px 0;
+            font-size: 1.1em;
+            font-weight: 600;
             cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
+            border-radius: 30px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         button:hover {
-            background-color: #142e72;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
         #webcam-container {
-            margin: 15px 0;
+            margin-top: 15px;
+        }
+
+        #webcam-container canvas {
+            border-radius: 12px;
+            border: 3px solid #1f4fd8;
         }
 
         #label-container div {
-            margin: 5px 0;
-            font-weight: bold;
+            margin: 6px 0;
+            padding: 8px;
+            background-color: #eef5ff;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        ol {
+            text-align: left;
+        }
+
+        .footer-note {
+            font-size: 0.9em;
+            margin-top: 15px;
+            color: #555;
         }
     </style>
 </head>
+
 <body>
     <header>Customer Purchase Predictor</header>
 
     <div class="container">
-        <p>Analyze customer expressions to see how likely they are to buy a product.</p>
-        <p><em>Look at the camera to see the prediction in real time!</em></p>
+        <h2>Customer Face Analysis</h2>
 
-        <button type="button" onclick="init()">Start</button>
+        <p>
+            This interactive website uses machine learning to analyze facial expressions
+            and estimate a customer's likelihood of purchasing a product.
+        </p>
+
+        <hr>
+
+        <h3>🔍 The Problem / Idea</h3>
+        <p>
+            Businesses often struggle to understand customer interest in real time.
+            This project explores how AI can analyze facial expressions to gain insights
+            into customer engagement while also highlighting ethical concerns.
+        </p>
+
+        <h3>🧠 How the Model Works</h3>
+        <p>
+            The model was trained using Google Teachable Machine with labeled facial expressions.
+            When the webcam is active, the model analyzes each frame and predicts which
+            expression it sees along with a confidence score.
+        </p>
+
+        <h3>🎯 Who Benefits?</h3>
+        <p>
+            Entrepreneurs, marketers, UX designers, and students can benefit from exploring
+            how facial recognition AI may influence customer experience and decision-making.
+        </p>
+
+        <h3>👉 How to Use</h3>
+        <ol>
+            <li>Click the <strong>Start Camera</strong> button</li>
+            <li>Allow camera access</li>
+            <li>Change your facial expression</li>
+            <li>Watch the prediction update in real time</li>
+        </ol>
+
+        <button type="button" onclick="init()">Start Camera</button>
+
         <div id="webcam-container"></div>
         <div id="label-container"></div>
+
+        <p class="footer-note">
+            ⚠️ This project is for educational purposes only and demonstrates the importance
+            of ethical and responsible AI use.
+        </p>
     </div>
 
     <script type="text/javascript">
@@ -94,6 +174,7 @@
 
             document.getElementById("webcam-container").appendChild(webcam.canvas);
             labelContainer = document.getElementById("label-container");
+            labelContainer.innerHTML = "";
             for (let i = 0; i < maxPredictions; i++) {
                 labelContainer.appendChild(document.createElement("div"));
             }
@@ -108,13 +189,15 @@
         async function predict() {
             const prediction = await model.predict(webcam.canvas);
             for (let i = 0; i < maxPredictions; i++) {
-                const classPrediction =
-                    prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-                labelContainer.childNodes[i].innerHTML = classPrediction;
+                labelContainer.childNodes[i].innerHTML =
+                    prediction[i].className + ": " +
+                    (prediction[i].probability * 100).toFixed(1) + "%";
             }
         }
     </script>
 </body>
 </html>
+
+
 
 
